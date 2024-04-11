@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %} 
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <h2 class="text-center mb-4 mt-4">Welcome to Weather Forecast</h2>
+                <form action="{{ url_for('routes.index') }}" method="post" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="city" placeholder="Enter city name" required>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Get Weather</button>
+                        </div>
+                    </div>
+                </form>
+                {% if weather_data %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="weather-info row">
+                            <div class="weather-details col-md-6">
+                                <h4>{{ weather_data.location }}</h4>
+                                <p class="temp">{{ weather_data.temperature }} °C</p>
+                                <p class="desc">{{ weather_data.description }}</p>
+                                <p>Humidity: {{ weather_data.humidity }}%</p>
+                                <p>Wind Speed: {{ weather_data.wind_speed }} m/s</p>
+                            </div>
+                            <div class="weather-icon col-md-6 text-md-right">
+                                <img src="{{ url_for('static', filename='img/weather_icons/' + weather_data.icon + '.png') }}" alt="Weather Icon">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Forecast Section -->
+                {% if weather_data and forecast_data %}
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">5-Day Forecast</h4>
+                        <h6>{{ weather_data.location }}</h6> <!-- Display location -->
+                        <div class="forecast row w-100">
+                            {% for day in forecast_data %}
+                                <div class="forecast-day col-md-6 mb-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="weather-details">
+                                                <h6>{{ day.date }}</h6>
+                                                <p class="desc">{{ day.description }}</p>
+                                                <p>High: {{ day.high_temp }} °C</p>
+                                                <p>Low: {{ day.low_temp }} °C</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 d-flex justify-content-end align-items-center">
+                                            <div class="weather-icon">
+                                                <img src="{{ url_for('static', filename='img/weather_icons/' + day.icon + '.png') }}" alt="Weather Icon">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
